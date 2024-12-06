@@ -1,9 +1,12 @@
 package com.marcinmoskala.composeexercises.ui.samples.guesser
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -13,6 +16,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -22,6 +27,9 @@ import androidx.compose.ui.text.withStyle
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import modifierorderguesser.composeapp.generated.resources.Res
+import modifierorderguesser.composeapp.generated.resources.heart_full
+import org.jetbrains.compose.resources.imageResource
 
 @Preview
 @Composable
@@ -66,7 +74,9 @@ fun GameOverScreen(
                     fontSize = 16.sp,
                     textDecoration = TextDecoration.Underline
                 )
-                append("Made with ❤\nby ")
+                append("Made with ")
+                appendInlineContent(id = "love")
+                append("\nby ")
                 withLink(LinkAnnotation.Url(url = "https://kt.academy/user/marcinmoskala")) {
                     withStyle(style = hyperlinkStyle) {
                         append("Marcin Moskała")
@@ -86,6 +96,17 @@ fun GameOverScreen(
                 }
                 append(".")
             },
+            inlineContent = mapOf(
+                "love" to InlineTextContent(
+                    Placeholder(16.sp, 16.sp, PlaceholderVerticalAlign.TextCenter)
+                ) {
+                    Image(
+                        imageResource(Res.drawable.heart_full),
+                        modifier = Modifier.fillMaxSize(),
+                        contentDescription = "love"
+                    )
+                }
+            ),
             textAlign = TextAlign.Center,
             fontSize = 16.sp,
             modifier = Modifier.padding(20.dp),

@@ -8,7 +8,8 @@
     <script type="application/javascript" src="composeApp.js"></script>
     <script>
         setTimeout(function(){
-            document.getElementById('no_wasm_comment').style.visibility = "visible";
+            let noWasmComment = document.getElementById('no_wasm_comment');
+            if (noWasmComment && noWasmComment.style) noWasmComment.style.visibility = "visible";
         }, 5000);
     </script>
 </head>
