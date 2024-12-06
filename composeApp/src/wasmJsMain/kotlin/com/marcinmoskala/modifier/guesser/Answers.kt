@@ -19,9 +19,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PixelMap
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
+import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.unit.dp
 import modifierorderguesser.composeapp.generated.resources.Res
 import modifierorderguesser.composeapp.generated.resources.avatar
@@ -43,7 +45,7 @@ fun Answers(
     val graphicsLayers = options.associateWith { rememberGraphicsLayer() } // Is this correct?
     LaunchedEffect(options) {
         optionsDisplayed = visuallyUniqueIncludingCorrect(answer, optionsDisplayed, graphicsLayers, maxVisible)
-        if (optionsDisplayed.size == 1) {
+        if (optionsDisplayed.size <= 1) {
             onSkip()
         }
     }
@@ -90,7 +92,7 @@ suspend fun visuallyUniqueIncludingCorrect(
     graphicsLayers: Map<List<ModifierOption>, GraphicsLayer>,
     maxVisible: Int
 ): List<List<ModifierOption>> {
-    val bitmaps = graphicsLayers.mapValues { it.value.toImageBitmap() }
+    val bitmaps = graphicsLayers.mapValues { it.value.toImageBitmap().toPixelMap().let(::ComparablePixelMap) }
     val correctBitmap = bitmaps[correctOption]!!
     val otherUniqueBitmaps = optionsDisplayed
         .filter { it != correctOption && bitmaps[it] != correctBitmap }
@@ -112,5 +114,34 @@ fun AnswerOption(option: List<ModifierOption>, modifier: Modifier = Modifier) {
                 modifierOption.transformation(acc)
             }
         )
+    }
+}
+
+class ComparablePixelMap(val pixelMap: PixelMap) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is ComparablePixelMap) return false
+        if (pixelMap.width != other.pixelMap.width || pixelMap.height != other.pixelMap.height) {
+            return false
+        }
+        for (y in 0 until this.pixelMap.height) {
+            for (x in 0 until this.pixelMap.width) {
+                if (pixelMap[x, y] != other.pixelMap[x, y]) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = pixelMap.width
+        result = 31 * result + pixelMap.height
+        for (y in 0 until this.pixelMap.height) {
+            for (x in 0 until this.pixelMap.width) {
+                result = 31 * result + pixelMap[x, y].value.toInt()
+            }
+        }
+        return result
     }
 }
