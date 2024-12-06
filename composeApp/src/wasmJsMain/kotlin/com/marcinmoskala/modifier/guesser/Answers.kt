@@ -5,10 +5,12 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,7 +26,12 @@ import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.graphics.toPixelMap
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import modifierorderguesser.composeapp.generated.resources.Res
 import modifierorderguesser.composeapp.generated.resources.avatar
 import org.jetbrains.compose.resources.painterResource
@@ -45,45 +52,85 @@ fun Answers(
     val graphicsLayers = options.associateWith { rememberGraphicsLayer() } // Is this correct?
     LaunchedEffect(options) {
         optionsDisplayed = visuallyUniqueIncludingCorrect(answer, optionsDisplayed, graphicsLayers, maxVisible)
-        if (optionsDisplayed.size <= 1) {
+        if (optionsDisplayed.size == 1) {
             onSkip()
         }
     }
     var answerGiven by remember(options) { mutableStateOf<List<ModifierOption>?>(null) }
-    FlowRow(
-        modifier = modifier
-            .padding(20.dp),
-        horizontalArrangement = Arrangement.Center,
+    Column(
         verticalArrangement = Arrangement.Center,
+        horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally,
+        modifier = modifier.padding(20.dp)
     ) {
-        optionsDisplayed.forEach { option ->
-            key(option.toString()) {
-                AnswerOption(option, modifier = Modifier
-                    .drawWithContent {
-                        graphicsLayers[option]?.let { layer ->
-                            layer.record { this@drawWithContent.drawContent() }
-                            drawLayer(layer)
+        if (answerGiven != null) {
+            AnswerCommentText(answerGiven, answer)
+        }
+        FlowRow(
+            horizontalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            optionsDisplayed.forEach { option ->
+                key(option.toString()) {
+                    AnswerOption(option, modifier = Modifier
+                        .drawWithContent {
+                            graphicsLayers[option]?.let { layer ->
+                                layer.record { this@drawWithContent.drawContent() }
+                                drawLayer(layer)
+                            }
                         }
-                    }
-                    .padding(8.dp)
-                    .let {
-                        when {
-                            answerGiven == null -> it
-                            option == answer -> it.border(4.dp, Color.Green)
-                            option == answerGiven -> it.border(4.dp, Color.Red)
-                            else -> it
+                        .padding(8.dp)
+                        .let {
+                            when {
+                                answerGiven == null -> it
+                                option == answer -> it.border(4.dp, Color.Green)
+                                option == answerGiven -> it.border(4.dp, Color.Red)
+                                else -> it
+                            }
                         }
-                    }
-                    .clickable {
-                        if (answerGiven == null) {
-                            answerGiven = option
-                        } else {
-                            onAnswer(answerGiven!!)
-                        }
-                    })
+                        .clickable {
+                            if (answerGiven == null) {
+                                answerGiven = option
+                            } else {
+                                onAnswer(answerGiven!!)
+                            }
+                        })
+                }
             }
         }
     }
+}
+
+@Composable
+private fun AnswerCommentText(
+    answerGiven: List<ModifierOption>?,
+    answer: List<ModifierOption>,
+) {
+    Text(
+        buildAnnotatedString {
+            append("Your answer was ")
+            val isCorrect = answerGiven == answer
+            if (isCorrect) {
+                withStyle(style = SpanStyle(color = Color.Green, fontWeight = FontWeight.Bold)) {
+                    append("correct")
+                }
+            } else {
+                withStyle(style = SpanStyle(color = Color.Red, fontWeight = FontWeight.Bold)) {
+                    append("incorrect")
+                }
+            }
+            append(".")
+            if (!isCorrect) {
+                append(" The correct answer was marked with ")
+                withStyle(style = SpanStyle(color = Color.Green, fontWeight = FontWeight.Bold)) {
+                    append("green")
+                }
+                append(".")
+            }
+            append(" To continue click on any option.")
+        },
+        fontSize = 24.sp,
+        modifier = Modifier.padding(bottom = 20.dp)
+    )
 }
 
 suspend fun visuallyUniqueIncludingCorrect(
@@ -117,17 +164,22 @@ fun AnswerOption(option: List<ModifierOption>, modifier: Modifier = Modifier) {
     }
 }
 
-class ComparablePixelMap(val pixelMap: PixelMap) {
+class ComparablePixelMap(val pixelMap: PixelMap, private val allowedDifference: Float = 0.01f) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ComparablePixelMap) return false
         if (pixelMap.width != other.pixelMap.width || pixelMap.height != other.pixelMap.height) {
             return false
         }
+        val allowedDifferent = pixelMap.width * pixelMap.height * allowedDifference
+        var different = 0
         for (y in 0 until this.pixelMap.height) {
             for (x in 0 until this.pixelMap.width) {
                 if (pixelMap[x, y] != other.pixelMap[x, y]) {
-                    return false
+                    different++
+                    if (different > allowedDifferent) {
+                        return false
+                    }
                 }
             }
         }
