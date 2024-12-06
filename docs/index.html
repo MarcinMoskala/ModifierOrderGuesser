@@ -6,9 +6,14 @@
     <title>ModifierOrderGuesser</title>
     <link type="text/css" rel="stylesheet" href="styles.css">
     <script type="application/javascript" src="composeApp.js"></script>
+    <script>
+        setTimeout(function(){
+            document.getElementById('div1').style.visibility = "visible";
+        }, 5000);
+    </script>
 </head>
 <body>
-<div id="no_wasm_comment">
+<div id="no_wasm_comment" style="visibility: hidden; text-align: center;">
     If you see this comment, it means you likely opened this website on iOS, which does not support the WasmGC, so this game (written in wasm) won't work. Sorry. You can open it any other popular operating system.
 </div>
 </body>
