@@ -66,7 +66,7 @@ fun GameOverScreen(
                     fontSize = 16.sp,
                     textDecoration = TextDecoration.Underline
                 )
-                append("Made with ❤\uFE0F\nby ")
+                append("Made with ❤\nby ")
                 withLink(LinkAnnotation.Url(url = "https://kt.academy/user/marcinmoskala")) {
                     withStyle(style = hyperlinkStyle) {
                         append("Marcin Moskała")
