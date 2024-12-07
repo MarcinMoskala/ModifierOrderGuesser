@@ -15,7 +15,7 @@ private const val MAX_OPTIONS = 30
 
 fun <T> limitOptions(options: Set<T>, answer: T): Set<T> {
     val optionsWithoutAnswer = options - answer
-    return setOf(answer) + optionsWithoutAnswer.take(MAX_OPTIONS - 1)
+    return setOf(answer) + optionsWithoutAnswer.shuffled().take(MAX_OPTIONS - 1)
 }
 
 fun <T> List<T>.permutations(): Set<List<T>> = when {
