@@ -30,7 +30,6 @@ kotlin {
     }
     
     sourceSets {
-        
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -40,6 +39,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation("com.russhwolf:multiplatform-settings:1.2.0")
         }
     }
 }
