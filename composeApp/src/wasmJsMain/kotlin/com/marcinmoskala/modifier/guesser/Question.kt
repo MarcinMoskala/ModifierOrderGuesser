@@ -39,7 +39,8 @@ fun Question(
             append(" = R.drawable.avatar),\n")
             appendParameterName("        contentDescription = null")
             append(",\n")
-            append("        modifier = Modifier\n")
+            appendParameterName("        modifier = ")
+            append("Modifier\n")
             for (m in answer) {
                 append("            .")
                 append(m.display)
