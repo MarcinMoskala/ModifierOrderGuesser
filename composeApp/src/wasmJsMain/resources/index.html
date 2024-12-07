@@ -9,14 +9,14 @@
     <script>
         setTimeout(function(){
             let noWasmComment = document.getElementById('no_wasm_comment');
-            let loader = document.getElementById('loader');
             if (noWasmComment && noWasmComment.style) noWasmComment.style.visibility = "visible";
-            if (loader && loader.style) loader.style.visibility = "hidden";
+            let spinner = document.getElementById('spinner');
+            if (spinner && spinner.style) spinner.style.visibility = "hidden";
         }, 5000);
     </script>
 </head>
 <body>
-<div id="loader" style="visibility: visible; text-align: center;position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);">
+<div id="spinner" style="visibility: visible; text-align: center;position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);">
     <img src="spinner.gif" alt="spinner" width="100" height="100">
 </div>
 <div id="no_wasm_comment" style="visibility: hidden; text-align: center;position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);">
