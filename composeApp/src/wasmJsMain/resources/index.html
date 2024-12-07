@@ -9,12 +9,17 @@
     <script>
         setTimeout(function(){
             let noWasmComment = document.getElementById('no_wasm_comment');
+            let loader = document.getElementById('loader');
             if (noWasmComment && noWasmComment.style) noWasmComment.style.visibility = "visible";
-        }, 2000);
+            if (loader && loader.style) loader.style.visibility = "hidden";
+        }, 5000);
     </script>
 </head>
 <body>
-<div id="no_wasm_comment" style="visibility: hidden; text-align: center;">
+<div id="loader" style="visibility: visible; text-align: center;position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);">
+    <img src="spinner.gif" alt="spinner" width="100" height="100">
+</div>
+<div id="no_wasm_comment" style="visibility: hidden; text-align: center;position: absolute; top: 50%; left: 50%; margin-right: -50%; transform: translate(-50%, -50%);">
     If you see this comment, it means you likely opened this website on iOS, which currently does not support the WasmGC, so this game (written in wasm) won't work. Sorry. You can open it in any other popular operating system, or you can update your iOS to the latest (development) version.
 </div>
 </body>
