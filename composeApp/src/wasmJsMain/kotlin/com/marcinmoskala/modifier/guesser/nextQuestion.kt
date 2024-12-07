@@ -29,9 +29,9 @@ fun <T> List<T>.permutations(): Set<List<T>> = when {
     }
 }
 
-internal fun <T> List<T>.plusAt(index: Int, element: T): List<T> = when {
-    index !in 0..size -> throw Error("Cannot put at index $index because size is $size")
-    index == 0 -> listOf(element) + this
-    index == size -> this + element
-    else -> dropLast(size - index) + element + drop(index)
+internal fun <T> List<T>.plusAt(index: Int, element: T): List<T> {
+    require(index in 0..size) { "Index $index is out of bounds 0..$size" }
+    val result = toMutableList()
+    result.add(index, element)
+    return result
 }
