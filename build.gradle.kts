@@ -8,8 +8,3 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
 }
 
-tasks.register<Copy>("updateDocs") {
-    dependsOn("wasmJsBrowserDistribution")
-    from("$buildDir/dist/wasmJs/productionExecutable/")
-    into("$rootDir/docs/")
-}

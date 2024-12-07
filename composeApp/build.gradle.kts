@@ -43,3 +43,10 @@ kotlin {
         }
     }
 }
+
+tasks.register<Copy>("updateDocs") {
+    dependsOn("wasmJsBrowserDistribution")
+    mustRunAfter("wasmJsBrowserDistribution")
+    from("$buildDir/dist/wasmJs/productionExecutable/")
+    into("$rootDir/docs/")
+}
