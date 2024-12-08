@@ -67,17 +67,19 @@ fun GameOverScreen(
             modifier = Modifier.padding(20.dp),
         )
         Text(
-            buildAnnotatedString {
-                append("Your score is $score in $difficulty difficulty. ")
-                if (bestScore != null) {
-                    append("\n")
-                    if (bestScore != score) {
-                        append("Your best score is $bestScore.")
-                    } else {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                            append("This is your new best score! ")
+            remember(score, difficulty, bestScore) {
+                buildAnnotatedString {
+                    append("Your score is $score in $difficulty difficulty. ")
+                    if (bestScore != null) {
+                        append("\n")
+                        if (bestScore != score) {
+                            append("Your best score is $bestScore.")
+                        } else {
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("This is your new best score! ")
+                            }
+                            appendInlineContent(id = "popper")
                         }
-                        appendInlineContent(id = "popper")
                     }
                 }
             },
