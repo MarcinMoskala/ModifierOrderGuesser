@@ -2,10 +2,15 @@ package com.marcinmoskala.composeexercises.ui.samples.guesser
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -21,7 +26,7 @@ data class Question(
 data class ModifierOption(
     val name: String,
     val display: AnnotatedString,
-    val transformation: (Modifier) -> Modifier,
+    val transformation: BoxScope.(Modifier) -> Modifier,
 ) {
     override fun toString(): String = name
 }
@@ -93,9 +98,7 @@ val modifiers: List<ModifierOption> = listOf(
             appendInt("3")
             append(".")
             appendProperty("dp")
-            append(", ")
-            appendProperty("Color")
-            append(".")
+            append(", Color.")
             appendProperty("Black")
             append(")")
         },
@@ -109,9 +112,7 @@ val modifiers: List<ModifierOption> = listOf(
             appendInt("3")
             append(".")
             appendProperty("dp")
-            append(", ")
-            appendProperty("Color")
-            append(".")
+            append(", Color.")
             appendProperty("Blue")
             append(")")
         },
@@ -121,9 +122,7 @@ val modifiers: List<ModifierOption> = listOf(
         name = "background(Color.Blue)",
         display = buildAnnotatedString {
             appendFunctionCall("background")
-            append("(")
-            appendProperty("Color")
-            append(".")
+            append("(Color.")
             appendProperty("Blue")
             append(")")
         },
@@ -133,9 +132,7 @@ val modifiers: List<ModifierOption> = listOf(
         name = "background(Color.Black)",
         display = buildAnnotatedString {
             appendFunctionCall("background")
-            append("(")
-            appendProperty("Color")
-            append(".")
+            append("(Color.")
             appendProperty("Black")
             append(")")
         },
@@ -144,8 +141,80 @@ val modifiers: List<ModifierOption> = listOf(
     ModifierOption(
         name = "fillMaxSize()",
         display = buildAnnotatedString {
-            appendFunctionCall("fillMaxSize()")
+            appendFunctionCall("fillMaxSize")
+            append("()")
         },
         transformation = { it.fillMaxSize() }
+    ),
+    ModifierOption(
+        name = "fillMaxWidth()",
+        display = buildAnnotatedString {
+            appendFunctionCall("fillMaxWidth")
+            append("()")
+        },
+        transformation = { it.fillMaxWidth() }
+    ),
+    ModifierOption(
+        name = "fillMaxHeight()",
+        display = buildAnnotatedString {
+            appendFunctionCall("fillMaxHeight()")
+        },
+        transformation = { it.fillMaxHeight() }
+    ),
+    ModifierOption(
+        name = "offset(10.dp, 10.dp)",
+        display = buildAnnotatedString {
+            appendFunctionCall("offset")
+            append("(")
+            appendInt("10")
+            append(".")
+            appendProperty("dp")
+            append(", ")
+            appendInt("10")
+            append(".")
+            appendProperty("dp")
+            append(")")
+        },
+        transformation = { it.offset(10.dp, 10.dp) }
+    ),
+    ModifierOption(
+        name = "offset(20.dp, 20.dp)",
+        display = buildAnnotatedString {
+            appendFunctionCall("offset")
+            append("(")
+            appendInt("20")
+            append(".")
+            appendProperty("dp")
+            append(", ")
+            appendInt("20")
+            append(".")
+            appendProperty("dp")
+            append(")")
+        },
+        transformation = { it.offset(20.dp, 20.dp) }
+    ),
+    ModifierOption(
+        name = "align(Alignment.Center)",
+        display = buildAnnotatedString {
+            appendFunctionCall("align")
+            append("(")
+            appendProperty("Alignment")
+            append(".")
+            appendProperty("Center")
+            append(")")
+        },
+        transformation = { it.align(Alignment.Center) }
+    ),
+    ModifierOption(
+        name = "align(Alignment.BottomEnd)",
+        display = buildAnnotatedString {
+            appendFunctionCall("align")
+            append("(")
+            appendProperty("Alignment")
+            append(".")
+            appendProperty("BottomEnd")
+            append(")")
+        },
+        transformation = { it.align(Alignment.BottomEnd) }
     ),
 )

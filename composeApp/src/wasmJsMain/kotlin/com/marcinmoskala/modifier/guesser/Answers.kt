@@ -159,7 +159,7 @@ fun AnswerOption(option: List<ModifierOption>, modifier: Modifier = Modifier) {
             painter = painterResource(Res.drawable.avatar),
             contentDescription = null,
             modifier = option.fold(Modifier as Modifier) { acc, modifierOption ->
-                modifierOption.transformation(acc)
+                modifierOption.transformation(this, acc)
             }
         )
     }
