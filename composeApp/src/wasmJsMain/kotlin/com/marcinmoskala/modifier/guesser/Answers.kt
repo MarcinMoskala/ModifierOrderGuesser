@@ -1,6 +1,7 @@
 package com.marcinmoskala.composeexercises.ui.samples.guesser
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -150,10 +151,13 @@ suspend fun visuallyUniqueIncludingCorrect(
     return optionsDisplayed.filter { it == correctOption || it in otherUniqueBitmaps }
 }
 
+val VeryLightGray = Color(0x94e0e0e0)
+
 @Composable
 fun AnswerOption(option: List<ModifierOption>, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier.size(100.dp)
+            .background(VeryLightGray)
     ) {
         Image(
             painter = painterResource(Res.drawable.avatar),

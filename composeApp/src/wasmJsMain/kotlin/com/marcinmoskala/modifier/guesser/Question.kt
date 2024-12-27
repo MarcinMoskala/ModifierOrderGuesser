@@ -1,10 +1,12 @@
 package com.marcinmoskala.composeexercises.ui.samples.guesser
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.buildAnnotatedString
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -16,7 +18,7 @@ fun Question(
     answer: List<ModifierOption> = nextQuestion(3).answer,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier.padding(20.dp)) {
+    Column(modifier = modifier.padding(20.dp).background(Color.White)) {
         Text(buildAnnotatedString {
             append("What should be the output of the following code?\n")
             append("\n")
@@ -29,7 +31,12 @@ fun Question(
             appendInt("100")
             append(".")
             appendProperty("dp")
-            append("),\n")
+            append(")\n")
+            append("        .")
+            appendFunctionCall("background")
+            append("(")
+            appendProperty("VeryLightGray")
+            append(")\n")
             append(") {\n")
             append("    Image(\n")
             appendParameterName("        painter = ")

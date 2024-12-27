@@ -198,7 +198,7 @@ val modifiers: List<ModifierOption> = listOf(
         display = buildAnnotatedString {
             appendFunctionCall("align")
             append("(")
-            appendProperty("Alignment")
+            append("Alignment")
             append(".")
             appendProperty("Center")
             append(")")
@@ -210,7 +210,7 @@ val modifiers: List<ModifierOption> = listOf(
         display = buildAnnotatedString {
             appendFunctionCall("align")
             append("(")
-            appendProperty("Alignment")
+            append("Alignment")
             append(".")
             appendProperty("BottomEnd")
             append(")")
