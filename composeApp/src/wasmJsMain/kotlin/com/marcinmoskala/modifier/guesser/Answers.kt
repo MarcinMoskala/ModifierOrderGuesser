@@ -169,7 +169,7 @@ fun AnswerOption(option: List<ModifierOption>, modifier: Modifier = Modifier) {
     }
 }
 
-class ComparablePixelMap(val pixelMap: PixelMap, private val allowedDifference: Float = 0.01f) {
+class ComparablePixelMap(val pixelMap: PixelMap, private val allowedDifference: Float = 0.05f) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ComparablePixelMap) return false
