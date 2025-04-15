@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PixelMap
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.graphics.toPixelMap
 import androidx.compose.ui.text.SpanStyle
@@ -48,6 +49,7 @@ fun Answers(
     maxVisible: Int = 4,
     onAnswer: (List<ModifierOption>) -> Unit = {},
     onSkip: () -> Unit = {},
+    avatar: Painter,
     modifier: Modifier = Modifier,
 ) {
     var optionsDisplayed by remember(options) { mutableStateOf(options) }
@@ -73,29 +75,32 @@ fun Answers(
         ) {
             optionsDisplayed.forEach { option ->
                 key(option.toString()) {
-                    AnswerOption(option, modifier = Modifier
-                        .drawWithContent {
-                            graphicsLayers[option]?.let { layer ->
-                                layer.record { this@drawWithContent.drawContent() }
-                                drawLayer(layer)
+                    AnswerOption(
+                        option, modifier = Modifier
+                            .drawWithContent {
+                                graphicsLayers[option]?.let { layer ->
+                                    layer.record { this@drawWithContent.drawContent() }
+                                    drawLayer(layer)
+                                }
                             }
-                        }
-                        .padding(8.dp)
-                        .let {
-                            when {
-                                answerGiven == null -> it
-                                option == answer -> it.border(4.dp, Color.Green)
-                                option == answerGiven -> it.border(4.dp, Color.Red)
-                                else -> it
+                            .padding(8.dp)
+                            .let {
+                                when {
+                                    answerGiven == null -> it
+                                    option == answer -> it.border(4.dp, Color.Green)
+                                    option == answerGiven -> it.border(4.dp, Color.Red)
+                                    else -> it
+                                }
                             }
-                        }
-                        .clickable {
-                            if (answerGiven == null) {
-                                answerGiven = option
-                            } else {
-                                onAnswer(answerGiven!!)
-                            }
-                        })
+                            .clickable {
+                                if (answerGiven == null) {
+                                    answerGiven = option
+                                } else {
+                                    onAnswer(answerGiven!!)
+                                }
+                            },
+                        avatar = avatar
+                    )
                 }
             }
         }
@@ -154,13 +159,17 @@ suspend fun visuallyUniqueIncludingCorrect(
 val VeryLightGray = Color(0x94e0e0e0)
 
 @Composable
-fun AnswerOption(option: List<ModifierOption>, modifier: Modifier = Modifier) {
+fun AnswerOption(
+    option: List<ModifierOption>,
+    avatar: Painter,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier.size(100.dp)
             .background(VeryLightGray)
     ) {
         Image(
-            painter = painterResource(Res.drawable.avatar),
+            painter = avatar,
             contentDescription = null,
             modifier = option.fold(Modifier as Modifier) { acc, modifierOption ->
                 modifierOption.transformation(this, acc)

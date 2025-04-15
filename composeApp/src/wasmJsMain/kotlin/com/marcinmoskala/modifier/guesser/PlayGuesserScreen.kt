@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.sp
 
 @Composable
@@ -20,6 +21,7 @@ fun PlayGuesserScreen(
     maxVisible: Int,
     onAnswer: (List<ModifierOption>) -> Unit = {},
     onSkip: () -> Unit = {},
+    avatar: Painter
 ) {
     Column(
         verticalArrangement = Arrangement.SpaceBetween,
@@ -44,6 +46,7 @@ fun PlayGuesserScreen(
             onAnswer = onAnswer,
             maxVisible = maxVisible,
             onSkip = onSkip,
+            avatar = avatar
         )
     }
 }
