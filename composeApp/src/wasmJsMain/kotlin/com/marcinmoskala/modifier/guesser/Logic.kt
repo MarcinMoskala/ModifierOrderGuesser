@@ -1,5 +1,7 @@
 package com.marcinmoskala.composeexercises.ui.samples.guesser
 
+import com.marcinmoskala.modifier.guesser.trackEvent
+
 sealed interface GameState
 data object Start : GameState
 data class Playing(val difficulty: Difficulty, val question: Question, val score: Int, val livesUsed: Int, val livesLeft: Int) : GameState
@@ -12,19 +14,32 @@ enum class Difficulty(val modifiers: Int, val possibilities: Int, val weight: Do
     Extreme(6, 10, 4.0),
 }
 
-fun start(difficulty: Difficulty): GameState = Playing(
-    difficulty = difficulty,
-    question = nextQuestion(difficulty.modifiers),
-    livesUsed = 0,
-    livesLeft = 3,
-    score = 0,
-)
+fun start(difficulty: Difficulty): GameState {
+    trackEvent("level_start", mapOf("difficulty" to difficulty.name))
+    return Playing(
+        difficulty = difficulty,
+        question = nextQuestion(difficulty.modifiers),
+        livesUsed = 0,
+        livesLeft = 3,
+        score = 0,
+    )
+}
 
 fun onAnswerGiven(state: Playing, answer: List<ModifierOption>, question: Question): GameState {
     val correct = answer == question.answer
+    trackEvent(
+        "answer_given", mapOf(
+            "difficulty" to state.difficulty.name,
+            "correct" to correct.toString(),
+            "score" to state.score.toString()
+        )
+    )
     val livesLeft = state.livesLeft - if (correct) 0 else 1
     val livesUsed = state.livesUsed + if (correct) 0 else 1
-    if (livesLeft <= 0) return GameOver(state.score, state.difficulty)
+    if (livesLeft <= 0) {
+        trackEvent("game_over", mapOf("difficulty" to state.difficulty.name, "score" to state.score.toString()))
+        return GameOver(state.score, state.difficulty)
+    }
 
     return Playing(
         difficulty = state.difficulty,
@@ -36,6 +51,7 @@ fun onAnswerGiven(state: Playing, answer: List<ModifierOption>, question: Questi
 }
 
 fun onSkip(state: Playing): GameState {
+    trackEvent("question_skipped", mapOf("difficulty" to state.difficulty.name))
     return state.copy(
         question = nextQuestion(state.question.answer.size),
     )
